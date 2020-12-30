@@ -1,16 +1,30 @@
 <template>
-  <time-add></time-add>
+  <div class="container" ref="thContainer">
+    <th-gltf @baipiao="baipiao"></th-gltf>
+  </div>
 </template>
 
 <script>
-import TimeAdd from "../components/TimeAdd.vue";
+import ThGltf from "@/components/ThGltf/index.vue";
+import { provide, ref } from "vue";
 export default {
-  components: { TimeAdd },
-
-  data() {
-    return {};
+  components: { ThGltf },
+  setup(props, context) {
+    const thContainer = ref(null);
+    provide("thContainer", thContainer);
+    const baipiao = function(arg) {
+      console.log(arg);
+    };
+    return { thContainer, baipiao };
   }
 };
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.container {
+  position: absolute;
+  width: 100px;
+  height: 100px;
+  border: 1px black solid;
+}
+</style>
