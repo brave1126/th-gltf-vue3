@@ -5,18 +5,23 @@
 </template>
 
 <script>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, onBeforeUnmount, onDeactivated } from "vue";
 import { createScene } from "./Plugins/ScenePlugin";
 import { createRenderer } from "./Plugins/RendererPlugin";
 import { createCamera, createCameraControl } from "./Plugins/CameraPlugin";
+import { addModel2Scene } from "./Plugins/LoadPlugin";
 export default {
   setup(props, context) {
-    // 组件容器
+    let modelObject = {
+      src: "/crash/scene.gltf",
+      scale: [3, 3, 3],
+      position: [0, 0, 0],
+      rotation: [0, 0, 0]
+    };
     const container = ref(null);
     const scene = createScene("#e0e0e0", "prod", 0.6, 0.8);
     let renderer = null;
     let camera = null;
-    // eslint-disable-next-line no-unused-vars
     let animateId = null;
     const animate = () => {
       animateId = requestAnimationFrame(animate);
@@ -38,6 +43,13 @@ export default {
       createCameraControl(camera, renderer.domElement);
       container.value.appendChild(renderer.domElement);
       animate();
+      addModel2Scene(scene, modelObject, context);
+    });
+    onBeforeUnmount(() => {
+      cancelAnimationFrame(animateId);
+    });
+    onDeactivated(() => {
+      cancelAnimationFrame(animateId);
     });
     return { container };
   }

@@ -1,21 +1,15 @@
 <template>
-  <div class="container" ref="thContainer">
-    <th-gltf @baipiao="baipiao"></th-gltf>
+  <div class="container">
+    <th-gltf></th-gltf>
   </div>
 </template>
 
 <script>
 import ThGltf from "@/components/ThGltf/index.vue";
-import { provide, ref } from "vue";
 export default {
   components: { ThGltf },
   setup(props, context) {
-    const thContainer = ref(null);
-    provide("thContainer", thContainer);
-    const baipiao = function(arg) {
-      console.log(arg);
-    };
-    return { thContainer, baipiao };
+    return {};
   }
 };
 </script>
