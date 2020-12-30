@@ -23,8 +23,8 @@ export default {
 <style lang="scss" scoped>
 .container {
   position: absolute;
-  width: 100px;
-  height: 100px;
+  width: 100%;
+  height: 100%;
   border: 1px black solid;
 }
 </style>
