@@ -6,10 +6,11 @@
 
 <script>
 import { ref, onMounted, onBeforeUnmount, onDeactivated } from "vue";
-import { createScene } from "./Plugins/ScenePlugin";
-import { createRenderer } from "./Plugins/RendererPlugin";
-import { createCamera, createCameraControl } from "./Plugins/CameraPlugin";
-import { addModel2Scene } from "./Plugins/LoadPlugin";
+import { createScene } from "./plugins/ScenePlugin";
+import { createRenderer } from "./plugins/RendererPlugin";
+import { createCamera, createCameraControl } from "./plugins/CameraPlugin";
+import { addModel2Scene } from "./plugins/LoadPlugin";
+import { windowResizeHandler } from "./utils/resize";
 export default {
   setup(props, context) {
     let modelObject = {
@@ -19,7 +20,7 @@ export default {
       rotation: [0, 0, 0]
     };
     const container = ref(null);
-    const scene = createScene("#e0e0e0", "prod", 0.6, 0.8);
+    let scene = null;
     let renderer = null;
     let camera = null;
     let animateId = null;
@@ -27,22 +28,14 @@ export default {
       animateId = requestAnimationFrame(animate);
       renderer.render(scene, camera);
     };
-    window.onresize = () => {
-      let { offsetWidth, offsetHeight } = container.value;
-      console.log(offsetWidth, offsetHeight);
-      // 重新设置渲染器尺寸
-      renderer.setSize(offsetWidth, offsetHeight);
-      // 重新设置相机长宽度比
-      camera.aspect = offsetWidth / offsetHeight;
-      // 刷新（矩阵）
-      camera.updateProjectionMatrix();
-    };
     onMounted(() => {
+      scene = createScene("#e0e0e0", "prod", 0.6, 0.8);
       renderer = createRenderer(container.value);
       camera = createCamera(container.value);
       createCameraControl(camera, renderer.domElement);
       container.value.appendChild(renderer.domElement);
       animate();
+      windowResizeHandler(container.value, renderer, camera);
       addModel2Scene(scene, modelObject, context);
     });
     onBeforeUnmount(() => {

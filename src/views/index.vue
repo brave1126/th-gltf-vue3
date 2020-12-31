@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <th-gltf></th-gltf>
+    <th-gltf @thLoad="thLoadHandler"></th-gltf>
   </div>
 </template>
 
@@ -9,7 +9,10 @@ import ThGltf from "@/components/ThGltf/index.vue";
 export default {
   components: { ThGltf },
   setup(props, context) {
-    return {};
+    let thLoadHandler = model => {
+      console.log("模型加载完成");
+    };
+    return { thLoadHandler };
   }
 };
 </script>
@@ -19,6 +22,5 @@ export default {
   position: absolute;
   width: 100%;
   height: 100%;
-  border: 1px black solid;
 }
 </style>
