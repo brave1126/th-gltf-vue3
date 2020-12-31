@@ -12,13 +12,31 @@ import { createCamera, createCameraControl } from "./plugins/CameraPlugin";
 import { addModel2Scene } from "./plugins/LoadPlugin";
 import { windowResizeHandler } from "./utils/resize";
 export default {
+  props: {
+    modelObject: {
+      type: Object,
+      required: true
+    },
+    backgroundColor: {
+      type: String,
+      default: "#e0e0e0"
+    },
+    mode: {
+      type: String,
+      default: "prod"
+    },
+    // 平行光光强
+    dlIntensity: {
+      type: Number,
+      default: 0.6
+    },
+    // 半球光光强
+    hlIntensity: {
+      type: Number,
+      default: 0.8
+    }
+  },
   setup(props, context) {
-    let modelObject = {
-      src: "/crash/scene.gltf",
-      scale: [3, 3, 3],
-      position: [0, 0, 0],
-      rotation: [0, 0, 0]
-    };
     const container = ref(null);
     let scene = null;
     let renderer = null;
@@ -29,14 +47,19 @@ export default {
       renderer.render(scene, camera);
     };
     onMounted(() => {
-      scene = createScene("#e0e0e0", "prod", 0.6, 0.8);
+      scene = createScene(
+        props.backgroundColor,
+        props.mode,
+        props.dlIntensity,
+        props.hlIntensity
+      );
       renderer = createRenderer(container.value);
       camera = createCamera(container.value);
       createCameraControl(camera, renderer.domElement);
       container.value.appendChild(renderer.domElement);
       animate();
       windowResizeHandler(container.value, renderer, camera);
-      addModel2Scene(scene, modelObject, context);
+      addModel2Scene(scene, props.modelObject, context);
     });
     onBeforeUnmount(() => {
       cancelAnimationFrame(animateId);
